@@ -1,27 +1,20 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block extrahead %} <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}"> {% endblock %}
+
 {% block content %}
-<div class="container">
-    <header>Login</header>
     <form method="POST">
 
         {% csrf_token %}
 
-        <div class="Input-Field">
             <input type="text" name="Username" required>
-            <label>Username</label>
-        </div>
-        <div class="Input-Field">
             <input type="password" name="Password" required>
-            <label>Password</label>
-        </div>
-        <div class="button">
-            <div class="inner">
-                <button>LOGIN</button>
-            </div>
-        </div>
+            <input type="submit">
     </form>
-</div>
-
+    {% if messages %} <!-- Messages for example: Invalid Username -->
+        {% for message in messages %}
+            {{message}}
+        {% endfor %}
+    {% endif %}
 {% endblock %}
