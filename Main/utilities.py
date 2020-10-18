@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login
 from requests import request 
 
 class Utilities:
+<<<<<<< HEAD
 # Checking email #    
     def validate_email(email): 
         email = str(email)
@@ -45,3 +46,5 @@ class Utilities:
                 return False   
 
         
+=======
+>>>>>>> 2e7ed6479762850abb69c18104f25fc23aabe174
