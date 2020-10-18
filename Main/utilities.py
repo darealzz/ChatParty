@@ -1,4 +1,14 @@
+from random import * 
+import string 
+
+
 class Utilities:
+
+# Passcode generation#
+    def generate(passcode): 
+        chars = string.ascii_letters + string.punctuation + string.digits
+        code = "".join(choice(chars) for i in range(randint(10,16)))
+
 # Checking email #    
     def validate_email(email): 
         email = str(email)
@@ -56,6 +66,3 @@ class Utilities:
             return True
         else:
             return 'Your password must contain a Special Character, an upper and lowercase character, and a number.'
-            
-
-        
