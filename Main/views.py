@@ -1,47 +1,63 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User, auth
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate as authenticate_user
 from django.contrib.auth import login as auth_login
 from django.contrib import messages
 
 # Create your views here.
 
 def index(request):
-    if request.user.is_authenticated == True: #If they are logged in, send them to the home page. Else to the login page.
+    if request.user.is_authenticated == True: #If they are logged in, send them to the home page. Else to the authenticate page.
         return redirect('/home')
     else:
-        return redirect('/login')
+        return redirect('/authenticate')
 
 def home(request):
-    if request.user.is_authenticated == True: #If they are logged in, send them to the home page. Else to the login page.
+    if request.user.is_authenticated == True: #If they are logged in, send them to the home page. Else to the authenticate page.
         pass
     else:
-        return redirect('/login')
+        return redirect('/authenticate')
 
 
     ctx = {'Title': 'Home'}
     return render(request, 'home.html', ctx)
 
-def login(request):
-    if request.user.is_authenticated == True: #If they are logged in, send them to the home page. Else to the login page.
+def authenticate(request):
+    if request.user.is_authenticated == True: #If they are logged in, send them to the home page. Else to the authenticate page.
         return redirect('/home')
     else:
         pass
 
-
+       
     if request.method == 'POST':
-        username = request.POST['Username']
-        password = request.POST['Password']
+        if 'login' in request.POST:
+            username = request.POST['Username']
+            password = request.POST['Password']
 
-        user = authenticate(request, username=username, password=password)
-        if user:
-            auth_login(request, user)
-            return redirect('/home/')
-        else:
-            print(User.objects.get(username=username))
-            return redirect('/') 
+            if not username or not password:
+                messages.add_message(request, messages.INFO, 'Looks like you forgot to fill out a field or two!', extra_tags='login oops')
+                return redirect('/')
+
+            user = authenticate_user(request, username=username, password=password)
+            if user:
+                auth_login(request, user)
+                return redirect('/home/')
+            elif not user:
+                messages.add_message(request, messages.INFO, 'It seems that you have given me some invalid data :(', extra_tags='login')
+                return redirect('/')
+
+        elif 'signup' in request.POST:
+            email = request.POST['Email']
+            username = request.POST['Username']  
+            password = request.POST['Password']
+            confirm_password = request.POST['Confirm_Password']         
+
+            x=messages.add_message(request, messages.INFO, f'worked', extra_tags='signup')
+
+            ctx = {'Title': 'Authenticate', 'Tab': 'signup'}
+            return render(request, 'authenticate.html', ctx)
 
     else:
-        ctx = {'Title': 'Login'}
-        return render(request, 'login.html', ctx)
+        ctx = {'Title': 'Authenticate'}
+        return render(request, 'authenticate.html', ctx)
 
