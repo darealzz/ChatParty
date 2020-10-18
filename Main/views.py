@@ -3,6 +3,7 @@ from django.contrib.auth.models import User, auth
 from django.contrib.auth import authenticate as authenticate_user
 from django.contrib.auth import login as auth_login
 from django.contrib import messages
+from .utilities import Utilities
 
 # Create your views here.
 
@@ -51,8 +52,20 @@ def authenticate(request):
             username = request.POST['Username']  
             password = request.POST['Password']
             confirm_password = request.POST['Confirm_Password']         
+            
+            email_validate = Utilities.validate_email(email)
+            username_validate = ''
+            password_validate = Utilities.validate_password(password, confirm_password)
 
-            x=messages.add_message(request, messages.INFO, f'worked', extra_tags='signup')
+            if not email or not username or not password or not confirm_password:
+                messages.add_message(request, messages.INFO, f'Looks like you forgot to fill out a field or two!', extra_tags='signup')
+
+            elif email_validate != True:
+                messages.add_message(request, messages.INFO, f'{email_validate}', extra_tags='signup')
+
+            elif password_validate != True:
+                messages.add_message(request, messages.INFO, f'{password_validate}', extra_tags='signup')
+                
 
             ctx = {'Title': 'Authenticate', 'Tab': 'signup'}
             return render(request, 'authenticate.html', ctx)
@@ -60,4 +73,13 @@ def authenticate(request):
     else:
         ctx = {'Title': 'Authenticate'}
         return render(request, 'authenticate.html', ctx)
+
+
+# class Message_Send(CreateView): 
+#     #TODO 
+
+# class Message_Detail(CreateView): 
+#     #TODO 
+
+# class MessageBox(ListView): 
 

@@ -1,22 +1,16 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.models import User, aut
-from django.contrib.auth import authenticate, login
-from requests import request 
-
 class Utilities:
-<<<<<<< HEAD
 # Checking email #    
     def validate_email(email): 
         email = str(email)
         if '@' not in email:
-            return False
+            return 'Please provide a real email.'
             
         email_lst = email.split('@')
         if len(email_lst) != 3: # ['Example', '@', 'example.com'], false for ['Ex', '@', 'mple', '@', 'example.com']
-            return False
+            return 'Please provide a real email.'
 
         if '.' not in email_lst[2]: # 'example.com'
-            return False
+            return 'Please provide a real email.'
 
         return True
 
@@ -34,17 +28,34 @@ class Utilities:
             return True
 
 # Checking email #
-    def check_password(password): 
+    def validate_password(password, second): 
         password = str(password) 
-        allowed_chars = '._abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!"#$%&/()=?*|€÷×ßŁ}§{@{}§<>'
-        not_allowed = ''
+        special_chars = """¬`!"£%^&*()_-+={[}]:;@'~#?/>.<,"""
+        specials = 0
+        upper = 0
+        lower = 0
+        nums = 0
+
+        if password != second:
+            return 'Seems like your passwords dont match...'
 
         for char in password:
-            if char in allowed_chars: 
-                return True:
-            elif char in not_allowed: 
-                return False   
+            if char.upper() == char:
+                upper += 1
+            if char.lower() == char:
+                lower += 1
+            if char in special_chars:
+                specials += 1
+            try:
+                if isinstance(int(char), int) == True:
+                    nums += 1
+            except:
+                continue
+
+        if specials + upper + lower + nums >= 4:
+            return True
+        else:
+            return 'Your password must contain a Special Character, an upper and lowercase character, and a number.'
+            
 
         
-=======
->>>>>>> 2e7ed6479762850abb69c18104f25fc23aabe174
